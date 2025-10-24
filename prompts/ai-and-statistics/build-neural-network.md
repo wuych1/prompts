@@ -25,7 +25,7 @@ Requirements:
 1. Load and preprocess data
 2. Define network architecture using layerGraph or layers array
 3. Set training options (optimizer, learning rate, epochs, batch size)
-4. Train the network with trainNetwork
+4. Train the network with trainnet
 5. Evaluate performance on test data
 6. Visualize training progress and results
 7. Include comments explaining architecture choices
@@ -53,7 +53,7 @@ Requirements:
 1. Load and preprocess data
 2. Define CNN architecture using layers array
 3. Set training options with Adam optimizer
-4. Train the network with trainNetwork
+4. Train the network with trainnet
 5. Evaluate performance on test data
 6. Visualize training progress and confusion matrix
 7. Include comments explaining architecture choices
@@ -96,6 +96,7 @@ Requirements:
 
 ### Convolutional Neural Network (CNN)
 ```matlab
+% Layer definition for trainnet (without classificationLayer)
 layers = [
     imageInputLayer([28 28 1])
 
@@ -112,22 +113,26 @@ layers = [
     maxPooling2dLayer(2, 'Stride', 2)
 
     fullyConnectedLayer(10)
-    softmaxLayer
-    classificationLayer];
+    softmaxLayer];
+
+% Train with: net = trainnet(XTrain, YTrain, layers, "crossentropy", options);
 ```
 
 ### LSTM for Sequence Data
 ```matlab
+% Layer definition for trainnet (without classificationLayer)
 layers = [
     sequenceInputLayer(numFeatures)
     lstmLayer(128, 'OutputMode', 'last')
     fullyConnectedLayer(numClasses)
-    softmaxLayer
-    classificationLayer];
+    softmaxLayer];
+
+% Train with: net = trainnet(XTrain, YTrain, layers, "crossentropy", options);
 ```
 
 ### Fully Connected (Tabular Data)
 ```matlab
+% Layer definition for trainnet (without classificationLayer)
 layers = [
     featureInputLayer(numFeatures)
     fullyConnectedLayer(128)
@@ -136,13 +141,15 @@ layers = [
     fullyConnectedLayer(64)
     reluLayer
     fullyConnectedLayer(numClasses)
-    softmaxLayer
-    classificationLayer];
+    softmaxLayer];
+
+% Train with: net = trainnet(XTrain, YTrain, layers, "crossentropy", options);
 ```
 
 ## Training Options Template
 
 ```matlab
+% Training options for trainnet
 options = trainingOptions('adam', ...
     'InitialLearnRate', 0.001, ...
     'MaxEpochs', 30, ...
@@ -153,6 +160,13 @@ options = trainingOptions('adam', ...
     'Verbose', false, ...
     'Plots', 'training-progress', ...
     'ExecutionEnvironment', 'auto');
+
+% Train network with trainnet (specify loss function)
+% For classification:
+net = trainnet(XTrain, YTrain, layers, "crossentropy", options);
+
+% For regression:
+% net = trainnet(XTrain, YTrain, layers, "mse", options);
 ```
 
 ## Related Prompts
@@ -163,4 +177,5 @@ options = trainingOptions('adam', ...
 ## References
 
 - [MATLAB Documentation: Deep Learning Toolbox](https://www.mathworks.com/help/deeplearning/)
+- [MATLAB Documentation: trainnet Function](https://www.mathworks.com/help/deeplearning/ref/trainnet.html)
 - [MATLAB Documentation: Create Simple Deep Learning Network](https://www.mathworks.com/help/deeplearning/ug/create-simple-deep-learning-network-for-classification.html)

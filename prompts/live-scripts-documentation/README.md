@@ -22,7 +22,7 @@ Generate comprehensive documentation for MATLAB functions following MathWorks st
 
 ---
 
-### [MATLAB Project Summary](project_summary.md)
+### [MATLAB Project Summary](project-summary.md)
 
 Generate a technical overview of a MATLAB project. This tool analyzes MATLAB codebases and creates detailed summaries suitable for junior engineers and team members unfamiliar with the code.
 

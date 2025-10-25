@@ -258,12 +258,6 @@ zoom on
 pan on
 ```
 
-## Related Prompts
-
-- [Analyze Geospatial Data](analyze-geospatial-data.md) - Process and analyze geographic datasets
-- [Create Interactive Maps](create-interactive-maps.md) - Build maps with user interaction
-- [Plot GPS Trajectories](plot-gps-trajectories.md) - Display GPS tracks and routes
-
 ## References
 
 - [MATLAB Documentation: Create a World Map](https://www.mathworks.com/help/map/create-a-world-map.html)

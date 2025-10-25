@@ -21,6 +21,9 @@ Design filters, analyze spectra, process signals, and work with communications s
 ### 🖼️ [Image Processing and Computer Vision](prompts/image-processing-and-computer-vision/)
 Enhance images, detect features, segment objects, and process video streams.
 
+### 🗺️ [Mapping](prompts/mapping/)
+Create world maps, analyze geospatial data, and visualize geographic information with custom projections.
+
 ### 🎮 [Control Systems](prompts/control-systems/)
 Design controllers, analyze stability, tune parameters, and simulate dynamic systems.
 

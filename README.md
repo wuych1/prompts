@@ -59,4 +59,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## License
 
-[![CC-BY-40](images/cc-by-40.png)
+![CC-BY-40](images/cc-by-40.png)

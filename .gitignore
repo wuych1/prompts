@@ -38,6 +38,9 @@ slprj/
 *.slxc
 *.autosave
 
+# MATLAB Drive metadata files
+.MATLABDriveTag
+
 # Build artifacts
 dist/
 build/

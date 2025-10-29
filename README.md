@@ -12,6 +12,12 @@ Create Live Scripts, generate documentation, and format MATLAB help text for fun
 ### 🔧 [Programming](prompts/programming/)
 Optimize performance, handle errors, validate inputs, and write clean, efficient MATLAB code.
 
+### 📈 [Data Visualization](prompts/data-visualization/)
+Create plots, charts, and publication-ready visualizations using MATLAB plotting functions.
+
+### 🎨 [App Building](prompts/app-building/)
+Build interactive MATLAB apps with App Designer and programmatic UIs for desktop and web applications.
+
 ### 🤖 [AI and Statistics](prompts/ai-and-statistics/)
 Build neural networks, perform statistical analysis, train machine learning models, and analyze data.
 

@@ -22,6 +22,12 @@ Transform basic MATLAB plots into publication-ready figures with custom colors, 
 **Tags:** `matlab` `visualization` `styling` `publication` `graphics` `customization`
 **Release:** All releases
 
+### [Convert Multiple Plots to Tiled Layout](convert-plots-to-tiledlayout.md)
+Transform separate figure windows or subplots into a modern tiled layout using tiledlayout and nexttile. Perfect for creating publication-ready multi-panel figures with consistent formatting.
+
+**Tags:** `matlab` `visualization` `plotting` `layout` `graphics` `tiledlayout`
+**Release:** R2019b+ (tiledlayout introduced)
+
 ## Performance Guidelines
 
 All prompts in this category follow MATLAB graphics performance best practices:
@@ -34,10 +40,11 @@ All prompts in this category follow MATLAB graphics performance best practices:
 
 ## Related Categories
 
-- [Live Scripts & Documentation](../live-scripts-documentation/) - For creating live script visualizations
-- [Programming](../programming/) - For optimizing visualization code
-- [AI and Statistics](../ai-and-statistics/) - For data analysis visualizations
+- [App Building](../app-building/) - For building interactive visualization apps
+- [Image Processing and Computer Vision](../image-processing-and-computer-vision/) - For image display and analysis
+- [Live Scripts & Documentation](../live-scripts-documentation/) - For interactive documents with embedded graphics
+- [Signal Processing](../signal-processing/) - For signal visualization and spectral analysis
 
 ## Contributing
 
-Have a prompt for data visualization? See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
+Have a prompt for MATLAB data visualization? See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.

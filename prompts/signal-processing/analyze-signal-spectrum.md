@@ -3,7 +3,7 @@ title: Analyze Signal Spectrum
 description: Perform frequency-domain analysis with MATLAB Signal Processing Toolbox using nonparametric spectral estimators and helper measurements.
 tags: [matlab, signal-processing, spectral-estimation, psd, pspectrum, pwelch, pmtm, periodogram, spectrogram, cpsd, coherence, transfer-function]
 release: Requires Signal Processing Toolbox (most functions). Some examples also reference DSP System Toolbox.
-notes: Prefer high-level analyzers over hand-written FFT code; avoid low-level scaling unless explicitly requested.
+notes: 
 ---
 
 # Analyze Signal Spectrum

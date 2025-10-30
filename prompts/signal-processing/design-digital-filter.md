@@ -10,7 +10,7 @@ Design and analyze digital filters (lowpass/highpass/bandpass/bandstop) using mo
 
 ---
 
-## Prompt Template
+## The Prompt
 
 ```markdown
 You are an expert MATLAB DSP engineer.
@@ -46,7 +46,7 @@ Design and apply a DIGITAL FILTER using MATLAB’s high-level, stable APIs.
 (Notes: keep frequency axes in Hz using `freqz(...,Fs)`; use `filtfilt` for zero‑phase offline; for streaming, use SOS/System objects or CTF. Keep notches moderate to avoid ringing.)
 ```
 ---
-## Notes
+## Usage Tips
 
 - **Pin the sample rate.** Always set `SampleRate=Fs` in designs; plot in Hz via `freqz(...,Fs)` / `grpdelay(...,Fs)`.
 - **FIR vs IIR.** Choose FIR for strict linear phase (equiripple); otherwise IIR is more efficient. Quote the in‑band group delay.
@@ -55,9 +55,6 @@ Design and apply a DIGITAL FILTER using MATLAB’s high-level, stable APIs.
 - **Long FIRs.** Switch to `fftfilt` (overlap‑add) beyond a length threshold.
 - **Report achieved specs.** Measure ripple/attenuation and −3 dB points from `freqz` data and state the numbers explicitly.
 - **Coefficients Depracated** The Coefficients property of digitalFilter object has been replaced by the Numerator and Denominator properties
-Here’s your ultra-concise Markdown note, in one bullet, ready to paste:
-- **Object → streaming:** Let `d` be a `digitalFilter` (from `d = designfilt(...)` or `[y,d] = lowpass(...)`). If CTF is available (R2024b+): `B = d.Numerator; A = d.Denominator; y = ctffilt(B,A,x)`.
-
 
 ---
 
@@ -93,7 +90,7 @@ figure; grpdelay(d,[],48e3); grid on
 Design a bandpass filter for speech:
 
 - Type: bandpass
-- Sample rate: 44_100 Hz
+- Sample rate: 44100 Hz
 - Fpass: [300 3400] Hz
 - Fstop: [200 3900] Hz
 - PassbandRipple: 1 dB, StopbandAtten: 60 dB
@@ -260,17 +257,57 @@ d = designfilt("notchiir", CenterFrequency=f0, QualityFactor=Q, SampleRate=Fs);
 
 ```matlab
 % 1) Get coefficients from the digitalFilter object d
+B = d.Numerator;                          % Lx3 per-section [b0 b1 b2]
+A = d.Denominator;                        % Lx3 per-section [a0 a1 a2]
+sos = [B A];                              % Lx6 [b0 b1 b2 a0 a1 a2] (for SOS APIs)
+L  = size(B,1);                           % number of biquad sections (FYI)
 
-B = d.Numerator;                          % Lx3
-A = d.Denominator;                        % Lx3
+% 2) Offline checks (zero-phase + response)
+% These are for verification/analysis only (not for real-time use).
+y0 = filtfilt(d, x);                      % zero-phase reference
+figure; freqz(d, [], Fs); grid on;        % magnitude/phase
+title('High-pass IIR (designfilt): |H(f)| & phase');
+figure; grpdelay(d, [], Fs); grid on;
+title('High-pass IIR (designfilt): group delay');
 
-% 2) Offline check (zero-phase) works directly with the object
-y0 = filtfilt(d, x);
-figure; freqz(d,[],Fs); grid on
-figure; grpdelay(d,[],Fs); grid on
+% 3) Streaming options (choose one)
 
-% 3) Streaming 
-y_rt = ctffilt(B,A,x);                    % CTF path (R2024b+)
+% 3A) CTF path — explicit state (pass state across frames)
+%     Use this if you want to keep CTF form end-to-end.
+%     One-shot (whole signal, no frames):
+y_rt_ctf_all = ctffilt(B, A, x);          % processes entire x (no external state)
+
+%     Frame-by-frame (real-time style) with state carryover:
+frameLen = 1024;                          % example frame size
+state_ctf = [];                           % first call -> internally zero state
+N = numel(x);
+y_rt_ctf = zeros(N,1);
+p = 1;
+while p <= N
+    q = min(p+frameLen-1, N);
+    [y_rt_ctf(p:q), state_ctf] = ctffilt(B, A, x(p:q), state_ctf);
+    p = q + 1;
+end
+
+% 3B) SOS System object — state handled internally for you
+%     Works great for streaming and codegen; no manual state.
+sosFilt = dsp.SOSFilter('Numerator', B, 'Denominator', A);
+
+%     One-shot (whole signal):
+y_rt_sos_all = sosFilt(x);
+
+%     Frame-by-frame:
+reset(sosFilt);                           % ensure known start for demo
+p = 1;
+y_rt_sos = zeros(N,1);
+while p <= N
+    q = min(p+frameLen-1, N);
+    y_rt_sos(p:q) = sosFilt(x(p:q));      % internal state preserved across calls
+    p = q + 1;
+end
+
+% (Optional) Quick comparison plot (offline)
+% figure; plot([y0 y_rt_ctf y_rt_sos]); legend('filtfilt reference','CTF stream','SOS stream'); grid on;
 ```
 
 ---

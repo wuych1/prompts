@@ -45,13 +45,11 @@ Options: RBW≈[VALUE] Hz | bands=[f1 f2; ...] Hz | nPeaks=[K] | metrics=[SNR SI
 5. **Two-signal analysis.** For input–output data, pair `tfestimate` with `mscohere` and access `cpsd` as needed to diagnose dynamics.
 6. **Nonuniform sampling.** Use `plomb` (Lomb–Scargle) for irregular time bases.
 
-## Common Notes
-
-- **Resolution:** Increase **segment length** (or tighten `FrequencyResolution` for `pspectrum`) to improve frequency resolution. Zero‑padding only refines the display grid.  
-- **Units:** Power spectrum (Power vs Hz‑integrated) vs **PSD** (Power/Hz). Label y‑axis accordingly (dB vs dB/Hz).  
-- **One‑ vs two‑sided:** Real signals often yield one‑sided spectra in toolbox functions; complex signals use two‑sided.  
-- **Windows & averaging:** Always state window/tapers, overlap, and averaging, because they affect noise floors and RBW.  
-- **Coherence‑gated interpretation:** When using `tfestimate`, rely on `mscohere` to judge trustworthy frequency regions.
+7. **Resolution:** Increase **segment length** (or tighten `FrequencyResolution` for `pspectrum`) to improve frequency resolution. Zero‑padding only refines the display grid.  
+8. **Units:** Power spectrum (Power vs Hz‑integrated) vs **PSD** (Power/Hz). Label y‑axis accordingly (dB vs dB/Hz).  
+9. **One‑ vs two‑sided:** Real signals often yield one‑sided spectra in toolbox functions; complex signals use two‑sided.  
+10. **Windows & averaging:** Always state window/tapers, overlap, and averaging, because they affect noise floors and RBW.  
+11. **Coherence‑gated interpretation:** When using `tfestimate`, rely on `mscohere` to judge trustworthy frequency regions.
 
 ## Example Usage
 

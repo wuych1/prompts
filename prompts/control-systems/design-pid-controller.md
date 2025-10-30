@@ -353,4 +353,4 @@ grid on;
 ## References
 
 - [MATLAB Documentation: PID Controller](https://www.mathworks.com/help/control/ref/pid.html)
-- [MATLAB Documentation: PID Tuning](https://www.mathworks.com/help/control/ug/introduction-pid-controller-types.html)
+- [MATLAB Documentation: PID Tuning](https://www.mathworks.com/help/control/pid-controller-design.html)

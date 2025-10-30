@@ -52,7 +52,7 @@ Generate the complete updated code with the tiled layout implementation.
 
 ## Example Usage
 
-### Example 1: Basic 2x2 Grid Layout
+### Example 1: Basic 1x2 Grid Layout
 
 ```text
 Convert the following MATLAB plots into a tiled layout using tiledlayout and nexttile:

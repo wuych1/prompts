@@ -1,5 +1,5 @@
 ---
-title: Design Digital Filter (Modern, Stable APIs) — v4
+title: Design Digital Filter
 summary: Incorporates concrete one-liners, correct IIR bandpass spec names, CTF/SOS streaming paths, and paste-ready examples.
 release: Signal Processing Toolbox (R2024b+ recommended for CTF); DSP System Toolbox optional
 notes: Prompt body is link-free and runnable offline. Use name=value syntax and double-quoted strings.

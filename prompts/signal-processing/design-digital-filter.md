@@ -10,8 +10,7 @@ Design and analyze digital filters (lowpass/highpass/bandpass/bandstop) using mo
 
 ---
 ## Metadata
-
-- **Tags:** `matlab` `signal-processing` `filter-design` `iir` `fir` `sos` `elliptic` `butterworth` `equiripple` `lowpass` `highpass` `bandpass` `bandstop` `notch` `realtime` `streaming` `designfilt` `sosfilt` `ctffilt` `filtfilt`
+- **Tags:** `matlab` `signal-processing` `filter-design` `iir` `fir` `sos` `lowpass` `highpass` `bandpass` `bandstop` `designfilt` `sosfilt` `ctffilt` `filtfilt` `filteranalyzer`
 - **MATLAB Release:** R2024b+
 - **Required Toolboxes:** Signal Processing Toolbox, (optional) DSP System Toolbox
 ---

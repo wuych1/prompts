@@ -1,178 +1,313 @@
 ---
-title: Design Digital Filter
-description: Design and analyze digital filters using Signal Processing Toolbox
-tags: [matlab, signal-processing, filter-design, dsp, butterworth, chebyshev, fir, iir]
-release: Requires Signal Processing Toolbox
-notes:
+title: Design Digital Filter (Modern, Stable APIs) — v4
+summary: Incorporates concrete one-liners, correct IIR bandpass spec names, CTF/SOS streaming paths, and paste-ready examples.
+release: Signal Processing Toolbox (R2024b+ recommended for CTF); DSP System Toolbox optional
+notes: Prompt body is link-free and runnable offline. Use name=value syntax and double-quoted strings.
 ---
 
-# Design Digital Filter
+# Objective
+Design and analyze digital filters (lowpass/highpass/bandpass/bandstop) using modern, stable MATLAB APIs with minimal specs. Be numerically robust by default.
 
-Design and analyze digital filters (lowpass, highpass, bandpass, bandstop) using various design methods.
+---
 
-## Metadata
+## Prompt Template
 
-- **Tags:** `matlab` `signal-processing` `filter-design` `dsp` `butterworth` `chebyshev` `fir` `iir`
-- **MATLAB Release:** Requires Signal Processing Toolbox
-- **Required Toolboxes:** Signal Processing Toolbox
+```markdown
+You are an expert MATLAB DSP engineer.
 
-## The Prompt
+Design and apply a DIGITAL FILTER using MATLAB’s high-level, stable APIs.
 
-```text
-Design a digital filter in MATLAB with the following specifications:
+**Use numerically robust forms:** default to SOS or CTF for IIR; `[b,a]` is acceptable for low‑order IIR in double precision; FIR returns `b` with `a=1`. Expose a `digitalFilter` object when possible.
 
-Filter requirements:
-- Type: [lowpass/highpass/bandpass/bandstop]
-- Design method: [butter/cheby1/cheby2/ellip/fir1/firpm]
-- Sampling frequency: [VALUE] Hz
-- Cutoff frequency: [VALUE] Hz (or passband/stopband for bandpass)
-- Filter order: [VALUE] or determine optimal
+=== SPECS ===
+• Type: "lowpass" | "highpass" | "bandpass" | "bandstop"
+• Fs (Hz): <number>
+• Bands (Hz): LP/HP → Fpass=<number>; BP/BS → Fpass=[f1 f2]; optional Fstop=...
+• Performance (dB): StopbandAtten=Rs; optional PassbandRipple=Rp
+• Phase/latency: "zero-phase (offline)" | "causal (real-time)"
+• Linear phase required: true | false
 
-Include:
-1. Filter design code
-2. Frequency response plot (magnitude and phase)
-3. Pole-zero plot
-4. Filter application to example signal
-5. Before/after comparison plots
-6. Comments on filter characteristics and performance
+=== DO ===
+1) **API selection**
+   • Simple specs → use lowpass/highpass/bandpass/bandstop; return `[y,d]`.
+   • Custom/multiband → use `designfilt(...)` to create `digitalFilter d` (FIR for linear phase; else IIR).
+2) **Stability**
+   • Offline zero‑phase → `filtfilt(d,x)` (or `filtfilt(sos,g,x)` for IIR coefficients).
+   • Streaming → `sosfilt(sos,x)` / `dsp.SOSFilter` or `ctffilt(B,A,x)` when available.
+3) **Validation (Hz‑aware)**
+   • Use `freqz(d,[],Fs)` and `grpdelay(d,[],Fs)`.
+   • Report: order/length, −3 dB cutoff(s), peak passband ripple (dB), minimum stopband attenuation (dB).
+4) **Demo**
+   • Build a representative test signal; show before/after (time + Welch PSD).
+5) **Deliver**
+   • Provide one complete, runnable MATLAB script (single code block).
+   • 3–5 bullets on design trade‑offs and whether specs were met.
+
+(Notes: keep frequency axes in Hz using `freqz(...,Fs)`; use `filtfilt` for zero‑phase offline; for streaming, use SOS/System objects or CTF. Keep notches moderate to avoid ringing.)
 ```
+---
+## Notes
 
-## Usage Tips
+- **Pin the sample rate.** Always set `SampleRate=Fs` in designs; plot in Hz via `freqz(...,Fs)` / `grpdelay(...,Fs)`.
+- **FIR vs IIR.** Choose FIR for strict linear phase (equiripple); otherwise IIR is more efficient. Quote the in‑band group delay.
+- **Offline vs streaming.** Use `filtfilt` for zero‑phase offline; for streaming use SOS/System objects or `ctffilt` when available. Manage state across chunks.
+- **Notches.** Avoid ultra‑high‑Q notches that ring. For multiple tones, prefer several modest bandstops.
+- **Long FIRs.** Switch to `fftfilt` (overlap‑add) beyond a length threshold.
+- **Report achieved specs.** Measure ripple/attenuation and −3 dB points from `freqz` data and state the numbers explicitly.
+- **Coefficients Depracated** The Coefficients property of digitalFilter object has been replaced by the Numerator and Denominator properties
+Here’s your ultra-concise Markdown note, in one bullet, ready to paste:
+- **Object → streaming:** Let `d` be a `digitalFilter` (from `d = designfilt(...)` or `[y,d] = lowpass(...)`). If CTF is available (R2024b+): `B = d.Numerator; A = d.Denominator; y = ctffilt(B,A,x)`.
 
-1. **Specify complete requirements:** Include all frequencies and the sampling rate
-2. **Mention constraints:** Real-time processing, linear phase, etc.
-3. **Request specific analyses:** Group delay, impulse response, etc.
-4. **Include test signal:** Describe what signal to filter
+
+---
 
 ## Example Usage
 
-### Example 1: Basic Lowpass Filter
+### Example 1 — Minimal lowpass (auto min‑order)
 
 ```
-Design a digital filter in MATLAB with the following specifications:
+Design a digital filter in MATLAB with:
 
-Filter requirements:
 - Type: lowpass
-- Design method: butterworth (butter)
-- Sampling frequency: 1000 Hz
-- Cutoff frequency: 100 Hz
-- Filter order: 6
+- Sample rate: 48e3 Hz
+- Fpass: 8e3 Hz, Fstop: 10e3 Hz
+- StopbandAtten: 80 dB
+- Phase/latency: "zero-phase (offline)"
+- Linear phase required: false
 
-Include:
-1. Filter design code
-2. Frequency response plot (magnitude and phase)
-3. Pole-zero plot
-4. Filter application to noisy sine wave signal
-5. Before/after comparison plots
-6. Comments on filter characteristics
+Include (full call + checks):
 ```
 
-### Example 2: Bandpass Filter for Audio
+```matlab
+[y,d] = lowpass(x, 8e3, 48e3, StopbandAttenuation=80, ImpulseResponse="iir", Steepness=0.85);
+y0 = filtfilt(d,x);
+figure; freqz(d,[],48e3); grid on
+figure; grpdelay(d,[],48e3); grid on
+```
+
+---
+
+### Example 2 — Speech band-pass via `designfilt` (IIR, min‑order)
 
 ```
-Design a bandpass filter for audio processing:
+Design a bandpass filter for speech:
 
-Filter requirements:
 - Type: bandpass
-- Design method: Chebyshev Type I (cheby1)
-- Sampling frequency: 44100 Hz
-- Passband: 300 Hz to 3400 Hz (telephone bandwidth)
-- Filter order: Determine optimal for < 1 dB passband ripple
-- Maximum passband ripple: 0.5 dB
+- Sample rate: 44_100 Hz
+- Fpass: [300 3400] Hz
+- Fstop: [200 3900] Hz
+- PassbandRipple: 1 dB, StopbandAtten: 60 dB
+- Phase/latency: "causal (real-time)"
+- Linear phase required: false
 
-Include:
-- Filter design with optimal order calculation
-- Frequency response (magnitude in dB, phase, group delay)
-- Application to speech signal
-- Spectrogram comparison before/after
+Include (full call using scalar 1/2 names + streaming path):
 ```
 
-### Example 3: FIR Filter with Linear Phase
+```matlab
+Fs = 44100;
+d = designfilt("bandpassiir", ...
+    StopbandFrequency1=200,  PassbandFrequency1=300, ...
+    PassbandFrequency2=3400, StopbandFrequency2=3900, ...
+    PassbandRipple=1, ...
+    StopbandAttenuation1=60, StopbandAttenuation2=60, ...
+    SampleRate=Fs, DesignMethod="ellip");  % min-order from Rp/Rs
+
+%  Extraction + streaming (CTF preferred; SOS fallback)
+B = d.Numerator; A = d.Denominator;              % CTF (per-section rows)
+y_rt = ctffilt(B, A, x);                         % CTF streaming (R2024b+)
+
+
+% Hz-aware analysis (offline)
+y0 = filtfilt(d,x);
+figure; freqz(d,[],Fs); grid on
+figure; grpdelay(d,[],Fs); grid on
+```
+
+*Fixed‑order, 3‑dB edges alternative:*
+
+```matlab
+d = designfilt("bandpassiir", FilterOrder=10, ...
+    HalfPowerFrequency1=300, HalfPowerFrequency2=3400, ...
+    SampleRate=Fs, DesignMethod="butter");
+```
+
+---
+
+### Example 3 — Linear‑phase FIR with Filter Analyzer overlay
 
 ```
-Design a linear-phase FIR lowpass filter:
+Design a linear-phase FIR lowpass:
 
-Filter requirements:
 - Type: lowpass
-- Design method: fir1 (window method)
-- Sampling frequency: 10 kHz
-- Cutoff frequency: 1 kHz
-- Filter order: 50
-- Window: Hamming
+- Sample rate: 10e3 Hz
+- Fpass: 1e3 Hz, Fstop: 1.2e3 Hz
+- StopbandAtten: 70 dB
+- Phase/latency: "zero-phase (offline)"
+- Linear phase required: true
 
-Include:
-- Filter coefficients
-- Magnitude and phase response
-- Impulse response
-- Demonstrate zero-phase filtering with filtfilt
-- Compare phase response with equivalent IIR filter
+Include (full call + overlay vs IIR):
 ```
+
+```matlab
+Fs = 1e4;
+
+% FIR (linear phase, equiripple)
+d_fir = designfilt("lowpassfir", ...
+    PassbandFrequency=1e3, StopbandFrequency=1.2e3, ...
+    PassbandRipple=0.2, StopbandAttenuation=70, ...
+    SampleRate=Fs, DesignMethod="equiripple");
+
+% IIR comparator (elliptic, min‑order)
+d_iir = designfilt("lowpassiir", ...
+    PassbandFrequency=1e3, StopbandFrequency=1.2e3, ...
+    PassbandRipple=0.2, StopbandAttenuation=70, ...
+    SampleRate=Fs, DesignMethod="ellip");
+
+% Zero‑phase check and overlay in Filter Analyzer
+y0 = filtfilt(d_fir,x);
+% 'FilterNames' values must contain valid MATLAB variable names
+fa = filterAnalyzer(d_fir, d_iir, FilterNames=["FIR_equiripple","IIR_ellip"], ...
+                    Analysis="magnitude", OverlayAnalysis="phase", ...
+                    SampleRates=Fs);
+```
+
+---
 
 ## Filter Design Methods
 
-### IIR Filters
-```matlab
-% Butterworth (maximally flat)
-[b, a] = butter(order, Wn);
-
-% Chebyshev Type I (passband ripple)
-[b, a] = cheby1(order, Rp, Wn);
-
-% Chebyshev Type II (stopband ripple)
-[b, a] = cheby2(order, Rs, Wn);
-
-% Elliptic (optimal stopband and passband)
-[b, a] = ellip(order, Rp, Rs, Wn);
-```
-
-### FIR Filters
-```matlab
-% Window method
-b = fir1(order, Wn, 'low', hamming(order+1));
-
-% Parks-McClellan (equiripple)
-b = firpm(order, F, A);
-
-% Least squares
-b = firls(order, F, A);
-```
-
-## Analysis Functions
+### High‑level one‑liners (minimum‑order; returns `[y,d]`)
 
 ```matlab
-% Frequency response
-[h, w] = freqz(b, a, 1024, fs);
+% Lowpass / Highpass (set ImpulseResponse="fir" for strict linear phase)
+[y,d] = lowpass(x, Fpass, Fs, StopbandAttenuation=Rs, ImpulseResponse="iir", Steepness=0.85);
+[yh,dh] = highpass(x, Fpass, Fs, StopbandAttenuation=Rs, ImpulseResponse="iir", Steepness=0.85);
 
-% Zero-pole plot
-zplane(b, a);
-
-% Filter visualization
-fvtool(b, a);
-
-% Group delay
-[gd, w] = grpdelay(b, a, 1024, fs);
+% Bandpass / Bandstop (passband given as [f1 f2])
+[yb,db] = bandpass(x, [f1 f2], Fs, StopbandAttenuation=Rs, ImpulseResponse="iir");
+[yn,dn] = bandstop(x, [f1 f2], Fs, StopbandAttenuation=Rs, ImpulseResponse="iir");
 ```
 
-## Application Patterns
+> **Notes:** One-liners pick minimum order from the attenuation target (and optional `Steepness`). Use `ImpulseResponse="fir"` for linear phase.
+
+---
+
+### FIR via `designfilt` (linear phase)
 
 ```matlab
-% Standard filtering
-y = filter(b, a, x);
+% Lowpass FIR (equiripple, Hz‑aware)
+d = designfilt("lowpassfir", ...
+    PassbandFrequency=Fpass, StopbandFrequency=Fstop, ...
+    PassbandRipple=Rp, StopbandAttenuation=Rs, SampleRate=Fs, ...
+    DesignMethod="equiripple");
 
-% Zero-phase filtering (forward-backward)
-y = filtfilt(b, a, x);
+% Highpass FIR (equiripple)
+d = designfilt("highpassfir", ...
+    PassbandFrequency=Fpass, StopbandFrequency=Fstop, ...
+    PassbandRipple=Rp, StopbandAttenuation=Rs, SampleRate=Fs, ...
+    DesignMethod="equiripple");
 
-% Second-order sections (more stable)
-[sos, g] = tf2sos(b, a);
-y = filtfilt(sos, g, x);
+% Bandpass FIR (equiripple)
+d = designfilt("bandpassfir", ...
+    PassbandFrequency=[f1 f2], StopbandFrequency=[fs1 fs2], ...
+    PassbandRipple=Rp, StopbandAttenuation=Rs, SampleRate=Fs, ...
+    DesignMethod="equiripple");
+
+% Bandstop FIR (weighted LS example)
+d = designfilt("bandstopfir", ...
+    FilterOrder=32, ...
+    PassbandFrequency1=400, StopbandFrequency1=500, ...
+    StopbandFrequency2=700, PassbandFrequency2=850, ...
+    DesignMethod="ls", ...
+    PassbandWeight1=1, StopbandWeight=3, PassbandWeight2=5, ...
+    SampleRate=2000);
 ```
 
-## Related Prompts
+> **Notes:** Equiripple uses ripple/attenuation (Rp/Rs). LS form uses band weights—handy when some passbands matter more.
 
-- [Analyze Signal Spectrum](analyze-signal-spectrum.md) - For analyzing filter output
-- [Optimize MATLAB Code Performance](../matlab-core-programming/optimize-code-performance.md) - For real-time filtering
+---
+
+### IIR via `designfilt`
+
+```matlab
+% Lowpass IIR (minimum order from Rp/Rs; low latency)
+d = designfilt("lowpassiir", ...
+    PassbandFrequency=Fpass, StopbandFrequency=Fstop, ...
+    PassbandRipple=Rp, StopbandAttenuation=Rs, SampleRate=Fs, ...
+    DesignMethod="ellip");
+
+% Bandpass IIR (ripple/attenuation SPEC‑SET: scalar edges with 1/2 names)
+d = designfilt("bandpassiir", ...
+    StopbandFrequency1=fs1,  PassbandFrequency1=f1, ...
+    PassbandFrequency2=f2,   StopbandFrequency2=fs2, ...
+    PassbandRipple=Rp, ...
+    StopbandAttenuation1=Rs, StopbandAttenuation2=Rs, ...
+    SampleRate=Fs, DesignMethod="ellip");
+
+% Bandpass IIR (fixed‑order half‑power SPEC‑SET: 3‑dB edges)
+d = designfilt("bandpassiir", FilterOrder=N, ...
+    HalfPowerFrequency1=f1, HalfPowerFrequency2=f2, ...
+    SampleRate=Fs, DesignMethod="butter");
+
+% Notch IIR (center/Q)
+d = designfilt("notchiir", CenterFrequency=f0, QualityFactor=Q, SampleRate=Fs);
+```
+
+> **Notes:** For **IIR bandpass/bandstop**, ripple/attenuation designs require **scalar** edge properties with `…1`/`…2` names. Vectors (e.g., `PassbandFrequency=[f1 f2]`) will error. Use the **HalfPower** spec‑set for fixed‑order, 3‑dB‑edge designs.
+
+---
+
+## Analysis & Application Patterns
+
+```matlab
+% 1) Get coefficients from the digitalFilter object d
+
+B = d.Numerator;                          % Lx3
+A = d.Denominator;                        % Lx3
+
+% 2) Offline check (zero-phase) works directly with the object
+y0 = filtfilt(d, x);
+figure; freqz(d,[],Fs); grid on
+figure; grpdelay(d,[],Fs); grid on
+
+% 3) Streaming 
+y_rt = ctffilt(B,A,x);                    % CTF path (R2024b+)
+```
+
+---
 
 ## References
 
-- [MATLAB Documentation: Filter Design](https://www.mathworks.com/help/signal/filter-design.html)
-- [MATLAB Documentation: Practical Introduction to Digital Filter Design](https://www.mathworks.com/help/signal/ug/practical-introduction-to-digital-filter-design.html)
+- Practical Introduction to Digital Filtering — MathWorks Example: https://www.mathworks.com/help/signal/ug/practical-introduction-to-digital-filtering.html
+- Practical Introduction to Digital Filter Design — MathWorks Example: https://www.mathworks.com/help/signal/ug/practical-introduction-to-digital-filter-design.html
+- Digital Filtering — Function Index (Signal Processing Toolbox): https://www.mathworks.com/help/signal/digital-filtering.html
+
+**High‑level “get‑go” filters**  
+- `lowpass`: https://www.mathworks.com/help/signal/ref/lowpass.html  
+- `highpass`: https://www.mathworks.com/help/signal/ref/highpass.html  
+- `bandpass`: https://www.mathworks.com/help/signal/ref/bandpass.html  
+- `bandstop`: https://www.mathworks.com/help/signal/ref/bandstop.html  
+
+**Unified design & objects**  
+- `designfilt`: https://www.mathworks.com/help/signal/ref/designfilt.html  
+- `digitalFilter` object: https://www.mathworks.com/help/signal/ref/digitalfilter.html  
+- Filter Analyzer app / programmatic interface: https://www.mathworks.com/help/signal/ref/filteranalyzer-app.html  
+- `filterAnalyzer` (object interface): https://www.mathworks.com/help/signal/ref/filteranalyzer.html  
+
+**Stable implementations (IIR)**  
+- `sosfilt` — Second‑order sections filtering: https://www.mathworks.com/help/signal/ref/sosfilt.html  
+- `ctffilt` — Cascaded Transfer Function filtering (R2024b+): https://www.mathworks.com/help/signal/ref/ctffilt.html  
+- `dsp.SOSFilter` System object: https://www.mathworks.com/help/dsp/ref/dsp.sosfilter-system-object.html  
+- `butter`: https://www.mathworks.com/help/signal/ref/butter.html  
+
+**Analysis & validation**  
+- `freqz`: https://www.mathworks.com/help/signal/ref/freqz.html  
+- `grpdelay`: https://www.mathworks.com/help/signal/ref/grpdelay.html  
+- `filtfilt`: https://www.mathworks.com/help/signal/ref/filtfilt.html  
+
+**Performance / long FIR**  
+- `fftfilt`: https://www.mathworks.com/help/signal/ref/fftfilt.html  
+
+**Notch/peak guidance**  
+- Design of Peaking and Notching Filters — Example: https://www.mathworks.com/help/dsp/ug/design-of-peaking-and-notching-filters.html
+
+---

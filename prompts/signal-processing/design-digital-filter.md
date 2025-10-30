@@ -1,19 +1,20 @@
 ---
 title: Design Digital Filter
-summary: Incorporates concrete one-liners, correct IIR bandpass spec names, CTF/SOS streaming paths, and paste-ready examples.
-release: Signal Processing Toolbox (R2024b+ recommended for CTF); DSP System Toolbox optional
-notes: 
+description: Design and analyze digital filters using modern, stable MATLAB APIs with minimal specs
+tags: [matlab, signal-processing, filter-design, iir, fir, sos, lowpass, highpass, bandpass, bandstop, designfilt, sosfilt, ctffilt, filtfilt, filterAnalyzer]
+release: R2024b+ (recommended for CTF); Earlier releases can use SOS
+notes:
 ---
 
 # Design Digital Filter
+
 Design and analyze digital filters (lowpass/highpass/bandpass/bandstop) using modern, stable MATLAB APIs with minimal specs. Be numerically robust by default.
 
----
 ## Metadata
-- **Tags:** `matlab` `signal-processing` `filter-design` `iir` `fir` `sos` `lowpass` `highpass` `bandpass` `bandstop` `designfilt` `sosfilt` `ctffilt` `filtfilt` `filteranalyzer`
-- **MATLAB Release:** R2024b+
+
+- **Tags:** `matlab` `signal-processing` `filter-design` `iir` `fir` `sos` `lowpass` `highpass` `bandpass` `bandstop` `designfilt` `sosfilt` `ctffilt` `filtfilt` `filterAnalyzer`
+- **MATLAB Release:** R2024b+ (recommended for CTF); Earlier releases can use SOS
 - **Required Toolboxes:** Signal Processing Toolbox, (optional) DSP System Toolbox
----
 ## The Prompt
 
 ```markdown
@@ -359,41 +360,40 @@ optsTD = filterAnalysisOptions("impulse","step", ...
     ResponseLength     = 512);
 disp2 = addDisplays(fa, AnalysisOptions = optsTD, FilterNames=filterNames);
 ```
----
+## Related Prompts
+
+- [Analyze Signal Spectrum](analyze-signal-spectrum.md) - Analyze filtered signals in the frequency domain
 
 ## References
 
-- Practical Introduction to Digital Filtering — MathWorks Example: https://www.mathworks.com/help/signal/ug/practical-introduction-to-digital-filtering.html
-- Practical Introduction to Digital Filter Design — MathWorks Example: https://www.mathworks.com/help/signal/ug/practical-introduction-to-digital-filter-design.html
-- Digital Filtering — Function Index (Signal Processing Toolbox): https://www.mathworks.com/help/signal/digital-filtering.html
+### General Tutorials
+- [Practical Introduction to Digital Filtering](https://www.mathworks.com/help/signal/ug/practical-introduction-to-digital-filtering.html) - Comprehensive filtering overview
+- [Practical Introduction to Digital Filter Design](https://www.mathworks.com/help/signal/ug/practical-introduction-to-digital-filter-design.html) - Design methodology guide
+- [Digital Filtering Function Index](https://www.mathworks.com/help/signal/digital-filtering.html) - Complete function reference
 
-**High‑level “get‑go” filters**  
-- `lowpass`: https://www.mathworks.com/help/signal/ref/lowpass.html  
-- `highpass`: https://www.mathworks.com/help/signal/ref/highpass.html  
-- `bandpass`: https://www.mathworks.com/help/signal/ref/bandpass.html  
-- `bandstop`: https://www.mathworks.com/help/signal/ref/bandstop.html  
+### High-Level Filter Functions
+- [lowpass](https://www.mathworks.com/help/signal/ref/lowpass.html) - Lowpass filter with automatic design
+- [highpass](https://www.mathworks.com/help/signal/ref/highpass.html) - Highpass filter with automatic design
+- [bandpass](https://www.mathworks.com/help/signal/ref/bandpass.html) - Bandpass filter with automatic design
+- [bandstop](https://www.mathworks.com/help/signal/ref/bandstop.html) - Bandstop filter with automatic design
 
-**Unified design & objects**  
-- `designfilt`: https://www.mathworks.com/help/signal/ref/designfilt.html  
-- `digitalFilter` object: https://www.mathworks.com/help/signal/ref/digitalfilter.html  
-- Filter Analyzer app / programmatic interface: https://www.mathworks.com/help/signal/ref/filteranalyzer-app.html  
-- `filterAnalyzer` (object interface): https://www.mathworks.com/help/signal/ref/filteranalyzer.html  
+### Filter Design & Objects
+- [designfilt](https://www.mathworks.com/help/signal/ref/designfilt.html) - Unified filter design interface
+- [digitalFilter](https://www.mathworks.com/help/signal/ref/digitalfilter.html) - Digital filter object
+- [Filter Analyzer App](https://www.mathworks.com/help/signal/ref/filteranalyzer-app.html) - Interactive filter analysis tool
+- [filterAnalyzer](https://www.mathworks.com/help/signal/ref/filteranalyzer.html) - Programmatic filter analysis
 
-**Stable implementations (IIR)**  
-- `sosfilt` — Second‑order sections filtering: https://www.mathworks.com/help/signal/ref/sosfilt.html  
-- `ctffilt` — Cascaded Transfer Function filtering (R2024b+): https://www.mathworks.com/help/signal/ref/ctffilt.html  
-- `dsp.SOSFilter` System object: https://www.mathworks.com/help/dsp/ref/dsp.sosfilter-system-object.html  
-- `butter`: https://www.mathworks.com/help/signal/ref/butter.html  
+### Filter Implementation
+- [sosfilt](https://www.mathworks.com/help/signal/ref/sosfilt.html) - Second-order sections filtering
+- [ctffilt](https://www.mathworks.com/help/signal/ref/ctffilt.html) - Cascaded transfer function filtering (R2024b+)
+- [dsp.SOSFilter](https://www.mathworks.com/help/dsp/ref/dsp.sosfilter-system-object.html) - SOS filter System object
+- [butter](https://www.mathworks.com/help/signal/ref/butter.html) - Butterworth filter design
+- [fftfilt](https://www.mathworks.com/help/signal/ref/fftfilt.html) - FFT-based FIR filtering for long filters
 
-**Analysis & validation**  
-- `freqz`: https://www.mathworks.com/help/signal/ref/freqz.html  
-- `grpdelay`: https://www.mathworks.com/help/signal/ref/grpdelay.html  
-- `filtfilt`: https://www.mathworks.com/help/signal/ref/filtfilt.html  
+### Analysis & Validation
+- [freqz](https://www.mathworks.com/help/signal/ref/freqz.html) - Frequency response of digital filter
+- [grpdelay](https://www.mathworks.com/help/signal/ref/grpdelay.html) - Group delay of digital filter
+- [filtfilt](https://www.mathworks.com/help/signal/ref/filtfilt.html) - Zero-phase digital filtering
 
-**Performance / long FIR**  
-- `fftfilt`: https://www.mathworks.com/help/signal/ref/fftfilt.html  
-
-**Notch/peak guidance**  
-- Design of Peaking and Notching Filters — Example: https://www.mathworks.com/help/dsp/ug/design-of-peaking-and-notching-filters.html
-
----
+### Special Topics
+- [Design of Peaking and Notching Filters](https://www.mathworks.com/help/dsp/ug/design-of-peaking-and-notching-filters.html) - Notch/peak filter design guide

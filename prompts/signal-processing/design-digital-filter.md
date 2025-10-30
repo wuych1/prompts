@@ -5,11 +5,16 @@ release: Signal Processing Toolbox (R2024b+ recommended for CTF); DSP System Too
 notes: 
 ---
 
-# Objective
+# Design Digital Filter
 Design and analyze digital filters (lowpass/highpass/bandpass/bandstop) using modern, stable MATLAB APIs with minimal specs. Be numerically robust by default.
 
 ---
+## Metadata
 
+- **Tags:** `matlab` `signal-processing` `filter-design` `iir` `fir` `sos` `elliptic` `butterworth` `equiripple` `lowpass` `highpass` `bandpass` `bandstop` `notch` `realtime` `streaming` `designfilt` `sosfilt` `ctffilt` `filtfilt`
+- **MATLAB Release:** R2024b+
+- **Required Toolboxes:** Signal Processing Toolbox, (optional) DSP System Toolbox
+---
 ## The Prompt
 
 ```markdown

@@ -12,7 +12,7 @@ Design and analyze digital filters (lowpass, highpass, bandpass, bandstop) using
 
 ## Metadata
 
-- **Tags:** `matlab` `signal-processing` `filter-design` `dsp` `butterworth` `chebyshev` `fir` `iir`
+- **Tags:** `matlab` `signal-processing` `filter-design` `dsp` `butterworth` `chebyshev` `fir` `iir` `filterAnalyzer`
 - **MATLAB Release:** Requires Signal Processing Toolbox
 - **Required Toolboxes:** Signal Processing Toolbox
 

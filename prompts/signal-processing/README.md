@@ -5,16 +5,18 @@ Prompts for designing filters, analyzing signals, and working with communication
 ## Prompts in this Category
 
 ### [Design Digital Filter](design-digital-filter.md)
-Design and analyze digital filters (lowpass, highpass, bandpass, bandstop) using various methods. Includes frequency response plots, pole-zero plots, and filter application examples.
+Design and analyze digital filters using modern MATLAB APIs with minimal specs. Includes numerically stable implementations, streaming support, and Filter Analyzer integration.
 
-**Tags:** `matlab` `signal-processing` `filter-design` `dsp` `butterworth` `chebyshev` `signal-processing-toolbox`
-**Release:** Requires Signal Processing Toolbox&trade;
+**Tags:** `matlab` `signal-processing` `filter-design` `iir` `fir` `sos` `lowpass` `highpass` `bandpass` `bandstop` `designfilt` `sosfilt` `ctffilt` `filtfilt` `filterAnalyzer`
+
+**Release:** R2024b+ (recommended for CTF); Earlier releases can use SOS
 
 ### [Analyze Signal Spectrum](analyze-signal-spectrum.md)
-Perform frequency domain analysis using FFT and spectral analysis techniques. Includes proper scaling, power spectral density, and dominant frequency identification.
+Perform frequency-domain analysis with MATLAB Signal Processing Toolbox using nonparametric spectral estimators and helper measurements. Includes PSD estimation (pspectrum, pwelch, pmtm), peak/band analysis, and two-signal workflows (coherence, transfer functions).
 
-**Tags:** `matlab` `signal-processing` `fft` `spectral-analysis` `frequency-domain` `signal-processing-toolbox`
-**Release:** Core FFT functions in base MATLAB&reg;, advanced features require Signal Processing Toolbox
+**Tags:** `matlab` `signal-processing` `spectral-estimation` `psd` `pspectrum` `pwelch` `pmtm` `periodogram` `spectrogram` `cpsd` `coherence` `transfer-function`
+
+**Release:** Requires Signal Processing Toolbox (most functions). Some examples also reference DSP System Toolbox
 
 ## Related Categories
 

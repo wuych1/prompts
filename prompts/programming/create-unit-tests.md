@@ -1,14 +1,14 @@
 ---
-title: Create Unit Tests with MATLAB Test
+title: Create Unit Tests
 description: Write comprehensive unit tests using the matlab.unittest framework
 tags: [matlab, testing, unit-tests, matlab-test, verification, unittest, quality]
 release: R2013a+ (matlab.unittest framework)
 notes:
 ---
 
-# Create Unit Tests with MATLAB Test
+# Create Unit Tests
 
-Write comprehensive unit tests using MATLAB's testing framework for reliable, maintainable code.
+Write unit tests using MATLAB's testing framework for reliable, maintainable code.
 
 ## Metadata
 

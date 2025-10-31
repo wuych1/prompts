@@ -44,12 +44,9 @@ Options: RBW≈[VALUE] Hz | bands=[f1 f2; ...] Hz | nPeaks=[K] | metrics=[SNR SI
 4. **Combine helpers.** After estimating a spectrum/PSD, use `findpeaks`, `bandpower`, `obw`, and, for tonal signals, `snr`/`thd`/`sinad`.
 5. **Two-signal analysis.** For input–output data, pair `tfestimate` with `mscohere` and access `cpsd` as needed to diagnose dynamics.
 6. **Nonuniform sampling.** Use `plomb` (Lomb–Scargle) for irregular time bases.
-
-7. **Resolution:** Increase **segment length** (or tighten `FrequencyResolution` for `pspectrum`) to improve frequency resolution. Zero‑padding only refines the display grid.  
-8. **Units:** Power spectrum (Power vs Hz‑integrated) vs **PSD** (Power/Hz). Label y‑axis accordingly (dB vs dB/Hz).  
-9. **One‑ vs two‑sided:** Real signals often yield one‑sided spectra in toolbox functions; complex signals use two‑sided.  
-10. **Windows & averaging:** Always state window/tapers, overlap, and averaging, because they affect noise floors and RBW.  
-11. **Coherence‑gated interpretation:** When using `tfestimate`, rely on `mscohere` to judge trustworthy frequency regions.
+7. **One‑ vs two‑sided spectra.** Real signals often yield one‑sided spectra in toolbox functions; complex signals use two‑sided.
+8. **Windows & averaging.** Always state window/tapers, overlap, and averaging, because they affect noise floors and RBW.
+9. **Coherence‑gated interpretation.** When using `tfestimate`, rely on `mscohere` to judge trustworthy frequency regions.
 
 ## Example Usage
 
@@ -138,6 +135,36 @@ Requirements:
 | Cross‑spectrum & FRF | `cpsd`, `tfestimate`, `mscohere` | Use same window/overlap/nfft across functions; interpret FRF only where coherence is high |
 | Nonuniform sampling | `plomb(x,Fs)` or `plomb(x,t)` | Lomb–Scargle PSD for irregular time bases |
 
+## Related Prompts
+
+- [Design Digital Filter](design-digital-filter.md) - Design filters to preprocess signals before spectral analysis
+
 ## References
 
-- MATLAB docs — **Nonparametric spectral estimation**: periodogram, Welch, multitaper, Lomb–Scargle, coherence, transfer function, and measurements.
+### Spectral Estimation Functions
+- [pspectrum](https://www.mathworks.com/help/signal/ref/pspectrum.html) - Analyze signals in the frequency and time-frequency domains
+- [pwelch](https://www.mathworks.com/help/signal/ref/pwelch.html) - Welch's power spectral density estimate
+- [pmtm](https://www.mathworks.com/help/signal/ref/pmtm.html) - Multitaper power spectral density estimate
+- [periodogram](https://www.mathworks.com/help/signal/ref/periodogram.html) - Periodogram power spectral density estimate
+- [plomb](https://www.mathworks.com/help/signal/ref/plomb.html) - Lomb-Scargle periodogram for unevenly sampled data
+
+### Peak and Band Analysis
+- [findpeaks](https://www.mathworks.com/help/signal/ref/findpeaks.html) - Find local maxima in data
+- [bandpower](https://www.mathworks.com/help/signal/ref/bandpower.html) - Band power of signal
+- [obw](https://www.mathworks.com/help/signal/ref/obw.html) - Occupied bandwidth of signal
+- [meanfreq](https://www.mathworks.com/help/signal/ref/meanfreq.html) - Mean frequency of signal
+- [medfreq](https://www.mathworks.com/help/signal/ref/medfreq.html) - Median frequency of signal
+- [powerbw](https://www.mathworks.com/help/signal/ref/powerbw.html) - 3-dB bandwidth of signal
+
+### Signal Quality Metrics
+- [snr](https://www.mathworks.com/help/signal/ref/snr.html) - Signal-to-noise ratio
+- [thd](https://www.mathworks.com/help/signal/ref/thd.html) - Total harmonic distortion
+- [sinad](https://www.mathworks.com/help/signal/ref/sinad.html) - Signal-to-noise-and-distortion ratio
+
+### Two-Signal Analysis
+- [cpsd](https://www.mathworks.com/help/signal/ref/cpsd.html) - Cross power spectral density
+- [tfestimate](https://www.mathworks.com/help/signal/ref/tfestimate.html) - Transfer function estimate
+- [mscohere](https://www.mathworks.com/help/signal/ref/mscohere.html) - Magnitude-squared coherence
+
+### General Documentation
+- [Nonparametric Methods](https://www.mathworks.com/help/signal/nonparametric-methods.html) - Overview of spectral estimation techniques

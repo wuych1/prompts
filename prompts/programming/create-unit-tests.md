@@ -6,9 +6,9 @@ release: R2013a+ (matlab.unittest framework)
 notes:
 ---
 
-# Create Unit Tests with MATLAB Test
+# Create Unit Tests
 
-Write comprehensive unit tests using MATLAB's testing framework for reliable, maintainable code.
+Write unit tests using MATLAB's testing framework for reliable, maintainable code.
 
 ## Metadata
 
